@@ -1,0 +1,10 @@
+.gradient-custom {
+    /* fallback for old browsers */
+    background: white;
+    /* Additional styles */
+    padding: 20px; /* Adjust as needed */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+    color: #fff; /* Text color */
+    font-size: 18px; /* Adjust as needed */
+}

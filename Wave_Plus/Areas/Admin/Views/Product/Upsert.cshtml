@@ -1,0 +1,110 @@
+﻿@model ProductVM
+
+<form method="post" enctype="multipart/form-data">
+    <input hidden asp-for="Product.Id" />
+    @* <input hidden asp-for="Product.ImageUrl" /> *@
+    
+    <div class="border p-3 pl-4 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary">@(Model.Product.Id != 0 ? "Update":"Create")Product</h2>
+            <hr />
+        </div>
+        <div class="row">
+            <div class="col-10">
+                <div class="mb-3">
+                    <label asp-for="Product.Name"></label>
+                    <input asp-for="Product.Name" class="form-control" />
+                    <span asp-validation-for="Product.Name" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Product.Description"></label>
+                    <textarea asp-for="Product.Description" class="form-control"></textarea>
+                    <span asp-validation-for="Product.Description" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Product.ListPrice"></label>
+                    <input asp-for="Product.ListPrice" class="form-control" />
+                    <span asp-validation-for="Product.ListPrice" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Product.Price"></label>
+                    <input asp-for="Product.Price" class="form-control" />
+                    <span asp-validation-for="Product.Price" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label" asp-for="Product.CategoryId"></label>
+                    <select asp-for="@Model.Product.CategoryId" asp-items="@Model.CategoryList" class=" form-control rounded">
+                        <option disabled selected>--Select Category--</option>
+                    </select>
+                    <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <input type="file" name="files" class="form-control" multiple/>
+                    <span asp-validation-for="Product.ProductImages" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" asp-for="Product.ProductAvailbality">@Model.Product.ProductAvailbality</label>
+                    <div class="form-group">
+                        <div class="custom-control custom-radio">
+                            <input type="radio" class="custom-control-input" name="availablity" id="available" value="available" required>
+                            <label class="custom-control-label" for="available">Available</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="custom-control custom-radio">
+                            <input type="radio" class="custom-control-input" name="availablity" id="unavailable" value="unavailable" required>
+                            <label class="custom-control-label" for="unavailable">Unavailable</label>
+                        </div>
+                    </div>
+                </div>
+                @if (Model.Product.Id != 0)
+                {
+                    <button type="submit" class="btn btn-primary" style="width:150px">Update</button>
+                }
+                else
+                {
+                    <button type="submit" class="btn btn-primary" style="width:150px">Create</button>
+                }
+                <a asp-controller="Product" asp-action="Index" class="btn btn-secondary" style="width:150px">
+                    Back to list
+                </a>
+            </div>
+            <div class="col-2">
+                @if (Model.Product.ProductImages != null)
+                {
+                    foreach (var image in Model.Product.ProductImages)
+                    {
+                        <div class="border p-1 m-2 text-center">
+                            <img src="@image.ImageUrl" width="100%"
+                                 style="border-radius:5px; border:1px solid #bbb9b9" />
+                            <a asp-action="DeleteImage" class="btn btn-danger mt-2" asp-route-imageId="@image.Id">
+                                <i class="bi bi-trash-fill"></i> Delete
+                            </a>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+        
+    </div>
+</form>
+
+
+
+
+
+@section Scripts{
+    <script>
+        tinymce.init({
+          selector: 'textarea',
+          plugins: 'anchor autolink charmap codesample emoticons link lists searchreplace visualblocks wordcount',
+          toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+        });
+    </script>
+
+
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

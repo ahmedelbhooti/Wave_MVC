@@ -1,0 +1,124 @@
+﻿@model ProductVM
+
+
+
+<style>
+    .product-img img {
+        height: 200px; /* Adjust the height as needed */
+        object-fit: cover;
+    }
+
+    .card {
+        height: 100%;
+    }
+</style>
+
+<div id="header-carousel" class="carousel slide" data-ride="carousel">
+    <div class="carousel-inner">
+        @foreach (var product in Model.Products)
+        {
+            //this line for iterate
+            <div class="carousel-item @if (product == Model.Products.First()) {<text>active</text>}" style="height: 410px;">
+                @if (product.ProductImages != null && product.ProductImages.Count() > 0)
+                {
+                    <img src="@product.ProductImages.FirstOrDefault().ImageUrl" class="img-fluid" alt="Product Image" />
+                }
+                else
+                {
+                    <img src="https://placehold.co/500x600/png" class="card-img-top rounded" />
+                }
+                @* <img class="img-fluid" src="@product.ImageUrl" alt="Product Image"> *@
+                <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                    <div class="p-3" style="max-width: 700px;">
+                        <h4 class="text-light text-uppercase font-weight-medium mb-3">@product.Name</h4>
+                        <h3 class="display-4 text-white font-weight-semi-bold mb-4">Reasonable Price</h3>
+                        <a asp-controller="Home" asp-action="Details" asp-route-productId="@product.Id" class="btn btn-light py-2 px-3">Shop Now</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <a class="carousel-control-prev" href="#header-carousel" data-slide="prev">
+        <div class="btn btn-dark" style="width: 45px; height: 45px;">
+            <span class="carousel-control-prev-icon mb-n2"></span>
+        </div>
+    </a>
+    <a class="carousel-control-next" href="#header-carousel" data-slide="next">
+        <div class="btn btn-dark" style="width: 45px; height: 45px;">
+            <span class="carousel-control-next-icon mb-n2"></span>
+        </div>
+    </a>
+</div>
+
+
+
+
+<!-- Shop Start -->
+<div class="container-fluid pt-5">
+    <div class="row px-xl-5">
+        <!-- Shop Product Start -->
+        <div class="col-lg-12 col-md-12">
+            <div class="row pb-3">
+                @foreach(var obj in Model.Products)
+                {
+                    if(obj.ProductAvailbality != SD.ProductUnAvailable)
+                    {
+                        <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
+                            <div class="card product-item border-0 mb-4">
+                                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                                    @if (obj.ProductImages != null && obj.ProductImages.Count() > 0)
+                                    {
+                                        <img src="@obj.ProductImages.FirstOrDefault().ImageUrl" class="card-img-top rounded" />
+                                    }
+                                    else
+                                    {
+                                        <img src="https://placehold.co/500x600/png" class="card-img-top rounded" />
+                                    }
+                                    @* <img class="img-fluid w-100" src="@obj.ImageUrl" alt=""> *@
+                                </div>
+                                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                                    <h6 class="mb-3">@obj.Name</h6>
+                                    @if (User.IsInRole(SD.Role_Customer) || User.IsInRole(SD.Role_Admin))
+                                    {
+                                        <div class="d-flex justify-content-center">
+                                            <h6>CHF @obj.Price</h6><h6 class="text-muted ml-2"><del>CHF @obj.ListPrice</del></h6>
+                                        </div>  
+                                    }
+                                </div>
+                                <div class="card-footer text-center justify-content-between border">
+                                    <a asp-controller="Home" asp-action="Details" asp-route-productId="@obj.Id" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
+                                </div>
+                            </div>
+                        </div> 
+                    }
+                }
+                <div class="col-12 pb-1">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center mb-3">
+                            <li class="page-item @((Model.PageNumber == 1) ? "disabled" : "")">
+                                <a class="page-link" href="@Url.Action("Index", new { page = Model.PageNumber - 1 })" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                            </li>
+                            @for (int i = 1; i <= Model.TotalPages; i++)
+                            {
+                                <li class="page-item @(Model.PageNumber == i ? "active" : "")">
+                                    <a class="page-link" href="@Url.Action("Index", new { page = i })">@i</a>
+                                </li>
+                            }
+                            <li class="page-item @((Model.PageNumber == Model.TotalPages) ? "disabled" : "")">
+                                <a class="page-link" href="@Url.Action("Index", new { page = Model.PageNumber + 1 })" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!-- Shop Product End -->
+    </div>
+</div>
+<!-- Shop End -->
