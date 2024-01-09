@@ -1,1 +1,1 @@
-Link for the website: https://mobilehause.ch/
+Website Link: https://mobilehause.ch/
